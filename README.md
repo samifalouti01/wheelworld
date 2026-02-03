@@ -37,3 +37,55 @@ app/
 ├── resources/              
 │   └── [id].tsx            # White Papers & Document templates
 └── _layout.tsx             # Root layout with Theme Provider
+
+
+1. (tabs) - Core Navigation
+
+Insights Feed (index.tsx):
+
+NewsCard: For short articles on Algerian/Global economy.
+
+StrategyAlert: A specialized card for fiscal/legal updates.
+
+Diagnostic Center (diagnostics.tsx):
+
+DiagnosticCard: Selection menu for different tests.
+
+Client Dossier (dossier.tsx):
+
+ProjectTimeline: Visual tracker for consulting mission progress.
+
+SecureVault: List of uploaded/received confidential documents.
+
+
+2. Diagnostic Engine (The Conversion Funnel)
+
+QuestionnaireView: Dynamic forms supporting Yes/No logic for quick evaluation.
+
+ScoreDisplay: An animated gauge or counter showing the 0-100 score.
+
+ConversionCTA: The critical bridge component that triggers "Book an Expert" or "Download Premium Guide" based on a low score.
+
+
+3. (premium) - Paid Services
+Expert Booking:
+
+
+CalendarPicker: Integrated calendar for selecting consultation slots.
+
+
+VideoMeetingLink: UI for Google Meet/Zoom integration.
+
+Priority Chat:
+
+
+ChatInterface: Real-time messaging with assigned consultants.
+
+4. Technical & Shared Components
+
+Payment Gateway: Integration for CIB / Edahabia (local) and Stripe/PayPal (international).
+
+
+PDF Viewer: To display generated mini-reports and premium market studies.
+
+

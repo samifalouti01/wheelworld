@@ -1,8 +1,14 @@
-import { useRouter } from 'expo-router';
-import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
-import { Colors } from '../constants/theme';
-
+import { useRouter } from "expo-router";
+import React from "react";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
+import { Colors } from "@/constants/theme";
 
 export default function Onboarding2({
   onNext,
@@ -12,14 +18,17 @@ export default function Onboarding2({
   onPrev: () => void;
 }) {
   const colorScheme = useColorScheme();
-  const theme = Colors[colorScheme ?? 'light'];
+  const theme = Colors[colorScheme ?? "light"];
   const router = useRouter();
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.content}>
         <View style={styles.illustrationContainer}>
-          <Image style={styles.illustration} source={require('../assets/images/onboarding-2.png')} />
+          <Image
+            style={styles.illustration}
+            source={require("../../assets/images/onboarding-2.png")}
+          />
         </View>
 
         <Text style={[styles.title, { color: theme.text }]}>
@@ -43,19 +52,35 @@ export default function Onboarding2({
           <Text style={[styles.stepItem, { color: theme.text }]}>
             4. Get actionable advice
           </Text>
-          <Text style={[styles.highlightTitle, { color: theme.tint }]}>Trust signals</Text>
-          <Text style={[styles.highlightItem, { color: theme.icon }]}>• Transparent pricing</Text>
-          <Text style={[styles.highlightItem, { color: theme.icon }]}>• Secure communication</Text>
-          <Text style={[styles.highlightItem, { color: theme.icon }]}>• Ratings & reviews</Text>
+          <Text style={[styles.highlightTitle, { color: theme.tint }]}>
+            Trust signals
+          </Text>
+          <Text style={[styles.highlightItem, { color: theme.icon }]}>
+            • Transparent pricing
+          </Text>
+          <Text style={[styles.highlightItem, { color: theme.icon }]}>
+            • Secure communication
+          </Text>
+          <Text style={[styles.highlightItem, { color: theme.icon }]}>
+            • Ratings & reviews
+          </Text>
         </View>
       </View>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={[styles.prevButton, { borderColor: theme.icon }]} onPress={() => router.push('/onboarding-1')}>
-          <Text style={[styles.prevButtonText, { color: theme.icon }]}>Previous</Text>
+        <TouchableOpacity
+          style={[styles.prevButton, { borderColor: theme.icon }]}
+          onPress={() => router.push("/onBoarding/onboarding-1")}
+        >
+          <Text style={[styles.prevButtonText, { color: theme.icon }]}>
+            Previous
+          </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.nextButton, { backgroundColor: theme.tint }]} onPress={() => router.push('/onboarding-3')}>
+        <TouchableOpacity
+          style={[styles.nextButton, { backgroundColor: theme.tint }]}
+          onPress={() => router.push("/onBoarding/onboarding-3")}
+        >
           <Text style={styles.nextButtonText}>Next</Text>
         </TouchableOpacity>
       </View>
@@ -71,8 +96,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: 28,
   },
   illustrationContainer: {
@@ -84,16 +109,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: "500",
+    textAlign: "center",
   },
   steps: {
-    width: '100%',
+    width: "100%",
     gap: 14,
     paddingHorizontal: 8,
   },
@@ -103,38 +128,38 @@ const styles = StyleSheet.create({
   },
   highlightTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   highlightItem: {
     fontSize: 15,
   },
   buttonRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
-    width: '100%',
+    width: "100%",
   },
   prevButton: {
     flex: 1,
     height: 56,
     borderWidth: 1.5,
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   prevButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   nextButton: {
     flex: 1.5,
     height: 56,
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   nextButtonText: {
-    color: '#000',
+    color: "#000",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

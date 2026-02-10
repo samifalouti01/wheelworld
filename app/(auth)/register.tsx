@@ -1,7 +1,14 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Handle from "@/components/Button/Handle";
@@ -57,23 +64,34 @@ export default function Register() {
   };
 
   return (
-    <View style={[styles.card, { paddingBottom: Math.max(insets.bottom, 24) }]}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Consulting</Text>
-        <Handle />
-      </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "position"}
+      contentContainerStyle={styles.keyboardContent}
+      keyboardVerticalOffset={Platform.OS === "ios" ? insets.top : 0}
+      enabled
+    >
+      <View style={styles.sheetWrapper}>
+        <View
+          style={[styles.card, { paddingBottom: Math.max(insets.bottom, 24) }]}
+        >
+          <View style={styles.header}>
+            <Text style={styles.title}>Consulting</Text>
+            <Handle />
+          </View>
 
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <Text style={styles.welcome}>Create an Account</Text>
+          <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+          >
+            <Text style={styles.welcome}>Create an Account</Text>
 
-        <Text style={styles.subtitle}>
-          Enter your details to create a new account.
-        </Text>
+            <Text style={styles.subtitle}>
+              Enter your details to create a new account.
+            </Text>
 
         <Controller
           control={control}
@@ -234,22 +252,34 @@ export default function Register() {
           mode="continue"
         />
 
-        <Text style={styles.legalText}>
-          By continuing, you agree to our{" "}
-          <Text style={styles.link}>Terms of Service</Text> and{" "}
-          <Text style={styles.link}>Privacy Policy</Text>.
-        </Text>
-      </ScrollView>
-    </View>
+            <Text style={styles.legalText}>
+              By continuing, you agree to our{" "}
+              <Text style={styles.link}>Terms of Service</Text> and{" "}
+              <Text style={styles.link}>Privacy Policy</Text>.
+            </Text>
+          </ScrollView>
+        </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
+  keyboardContent: {
+    flex: 1,
+  },
+
+  sheetWrapper: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+
   card: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
+    width: "100%",
     height: "70%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 60,
@@ -275,6 +305,7 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
+    flexGrow: 1,
     alignItems: "center",
     paddingBottom: 24,
   },

@@ -1,7 +1,14 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Handle from "@/components/Button/Handle";
@@ -46,120 +53,147 @@ export default function Login() {
   };
 
   return (
-    <View style={[styles.card, { paddingBottom: Math.max(insets.bottom, 24) }]}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Consulting</Text>
-        <Handle />
-      </View>
-
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <Text style={styles.welcome}>Welcome Back</Text>
-
-        <Text style={styles.subtitle}>
-          Enter your credentials to access your account.
-        </Text>
-
-        <Controller
-          control={control}
-          name="emailOrUsername"
-          rules={{
-            required: "Email or username is required",
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <InputField
-              label="Username or Email"
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter your email"
-              error={errors.emailOrUsername?.message}
-              hasError={!!errors.emailOrUsername}
-            />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="password"
-          rules={{
-            required: "Password is required",
-            minLength: {
-              value: 6,
-              message: "Password must be at least 6 characters",
-            },
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <InputField
-              label="Password"
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter your password"
-              secureTextEntry
-              isPasswordVisible={showPassword}
-              onTogglePasswordVisibility={() =>
-                setShowPassword((prev) => !prev)
-              }
-              error={errors.password?.message}
-              hasError={!!errors.password}
-            />
-          )}
-        />
-
-        <Text
-          style={styles.forgot}
-          onPress={() => router.push("/(auth)/forgot-password")}
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "position"}
+      contentContainerStyle={styles.keyboardContent}
+      keyboardVerticalOffset={Platform.OS === "ios" ? insets.top : 0}
+      enabled
+    >
+      <View style={styles.sheetWrapper}>
+        <View
+          style={[styles.card, { paddingBottom: Math.max(insets.bottom, 24) }]}
         >
-          Forgot Password?
-        </Text>
+          <View style={styles.header}>
+            <Text style={styles.title}>Consulting</Text>
+            <Handle />
+          </View>
 
-        <PrimaryButton
-          title="Login"
-          onPress={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
-          loading={isSubmitting}
-        />
-
-        <Text style={styles.signupText}>
-          Don't have an account?{" "}
-          <Text
-            style={styles.signupLink}
-            onPress={() => router.push("/(auth)/register")}
+          <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
           >
-            Sign Up
-          </Text>
-        </Text>
+            <Text style={styles.welcome}>Welcome Back</Text>
 
-        <OrDivider />
+            <Text style={styles.subtitle}>
+              Enter your credentials to access your account.
+            </Text>
 
-        <SocialAuthButton provider="google" onPress={() => {}} mode="signin" />
-        <SocialAuthButton
-          provider="facebook"
-          onPress={() => {}}
-          mode="signin"
-        />
+            <Controller
+              control={control}
+              name="emailOrUsername"
+              rules={{
+                required: "Email or username is required",
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputField
+                  label="Username or Email"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="Enter your email"
+                  error={errors.emailOrUsername?.message}
+                  hasError={!!errors.emailOrUsername}
+                />
+              )}
+            />
 
-        <Text style={styles.legalText}>
-          By continuing, you agree to our{" "}
-          <Text style={styles.link}>Terms of Service</Text> and{" "}
-          <Text style={styles.link}>Privacy Policy</Text>.
-        </Text>
-      </ScrollView>
-    </View>
+            <Controller
+              control={control}
+              name="password"
+              rules={{
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputField
+                  label="Password"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="Enter your password"
+                  secureTextEntry
+                  isPasswordVisible={showPassword}
+                  onTogglePasswordVisibility={() =>
+                    setShowPassword((prev) => !prev)
+                  }
+                  error={errors.password?.message}
+                  hasError={!!errors.password}
+                />
+              )}
+            />
+
+            <Text
+              style={styles.forgot}
+              onPress={() => router.push("/(auth)/forgot-password")}
+            >
+              Forgot Password?
+            </Text>
+
+            <PrimaryButton
+              title="Login"
+              onPress={handleSubmit(onSubmit)}
+              disabled={isSubmitting}
+              loading={isSubmitting}
+            />
+
+            <Text style={styles.signupText}>
+              Don't have an account?{" "}
+              <Text
+                style={styles.signupLink}
+                onPress={() => router.push("/(auth)/register")}
+              >
+                Sign Up
+              </Text>
+            </Text>
+
+            <OrDivider />
+
+            <SocialAuthButton
+              provider="google"
+              onPress={() => {}}
+              mode="signin"
+            />
+            <SocialAuthButton
+              provider="facebook"
+              onPress={() => {}}
+              mode="signin"
+            />
+
+            <Text style={styles.legalText}>
+              By continuing, you agree to our{" "}
+              <Text style={styles.link}>Terms of Service</Text> and{" "}
+              <Text style={styles.link}>Privacy Policy</Text>.
+            </Text>
+          </ScrollView>
+        </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
+  keyboardContent: {
+    flex: 1,
+  },
+
+  sheetWrapper: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+
   card: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
+    width: "100%",
     height: "70%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 60,
@@ -185,6 +219,7 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
+    flexGrow: 1,
     alignItems: "center",
     paddingBottom: 24,
   },

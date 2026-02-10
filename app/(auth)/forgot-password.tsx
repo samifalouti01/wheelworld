@@ -1,6 +1,15 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Handle from "@/components/Button/Handle";
 import PrimaryButton from "@/components/Button/PrimaryButton";
@@ -9,50 +18,74 @@ import { Colors, Fonts } from "@/constants/theme";
 
 export default function ResetPassword() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.card}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Consulting</Text>
-        <Handle />
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "position"}
+      contentContainerStyle={styles.keyboardContent}
+      keyboardVerticalOffset={Platform.OS === "ios" ? insets.top : 0}
+      enabled
+    >
+      <View style={styles.sheetWrapper}>
+        <View
+          style={[styles.card, { paddingBottom: Math.max(insets.bottom, 24) }]}
+        >
+          <View style={styles.header}>
+            <Text style={styles.title}>Consulting</Text>
+            <Handle />
+          </View>
+
+          <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+          >
+            <Text style={styles.heading}>Reset Password</Text>
+
+            <Text style={styles.subtitle}>
+              Enter your email address and we'll send you a link to reset your
+              password.
+            </Text>
+
+            <InputField
+              label="Email Address"
+              value=""
+              onChangeText={() => {}}
+              placeholder="Enter your email"
+              keyboardType="email-address"
+            />
+
+            <PrimaryButton title="Send Reset Link" onPress={() => {}} />
+
+            <Pressable onPress={() => router.back()}>
+              <Text style={styles.back}>Back to Login</Text>
+            </Pressable>
+          </ScrollView>
+        </View>
       </View>
-
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <Text style={styles.heading}>Reset Password</Text>
-
-        <Text style={styles.subtitle}>
-          Enter your email address and we’ll send you a link to reset your
-          password.
-        </Text>
-
-        <InputField
-          label="Email Address"
-          value=""
-          onChangeText={() => {}}
-          placeholder="Enter your email"
-          keyboardType="email-address"
-        />
-
-        <PrimaryButton title="Send Reset Link" onPress={() => {}} />
-
-        <Pressable onPress={() => router.back()}>
-          <Text style={styles.back}>Back to Login</Text>
-        </Pressable>
-      </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
+  keyboardContent: {
+    flex: 1,
+  },
+
+  sheetWrapper: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+
   card: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: -24,
+    width: "100%",
     height: "70%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 60,
@@ -60,7 +93,6 @@ const styles = StyleSheet.create({
 
     paddingHorizontal: 24,
     paddingTop: 12,
-    paddingBottom: 0, 
   },
 
   header: {
@@ -80,8 +112,9 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
+    flexGrow: 1,
     alignItems: "center",
-    paddingBottom: 64, 
+    paddingBottom: 64,
   },
 
   heading: {

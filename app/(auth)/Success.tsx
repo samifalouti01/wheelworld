@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     alignItems: "center",
-    paddingBottom: 64, 
+    paddingBottom: 64,
   },
 
   iconWrapper: {

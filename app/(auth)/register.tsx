@@ -93,164 +93,165 @@ export default function Register() {
               Enter your details to create a new account.
             </Text>
 
-        <Controller
-          control={control}
-          name="fullName"
-          rules={{
-            required: "Full name is required",
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <InputField
-              label="Full name"
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter your full name"
-              error={errors.fullName?.message}
-              hasError={!!errors.fullName}
-            />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="email"
-          rules={{
-            required: "Email is required",
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Invalid email address",
-            },
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <InputField
-              label="Email"
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter your email"
-              error={errors.email?.message}
-              hasError={!!errors.email}
-            />
-          )}
-        />
-
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            marginBottom: 8,
-            color: Colors.light.text,
-          }}
-        >
-          Account Type
-        </Text>
-
-        <Controller
-          control={control}
-          name="accountType"
-          rules={{
-            required: "Please select an account type",
-          }}
-          render={({ field: { onChange, value } }) => (
-            <>
-              <AccountTypeSelector
-                value={value}
-                onChange={onChange}
-                hasError={!!errors.accountType}
-              />
-              {errors.accountType && (
-                <Text style={styles.errorText}>
-                  {errors.accountType.message}
-                </Text>
+            <Controller
+              control={control}
+              name="fullName"
+              rules={{
+                required: "Full name is required",
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputField
+                  label="Full name"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="Enter your full name"
+                  error={errors.fullName?.message}
+                  hasError={!!errors.fullName}
+                />
               )}
-            </>
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="password"
-          rules={{
-            required: "Password is required",
-            minLength: {
-              value: 6,
-              message: "Password must be at least 6 characters",
-            },
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <InputField
-              label="Password"
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Enter your password"
-              secureTextEntry
-              isPasswordVisible={showPassword}
-              onTogglePasswordVisibility={() =>
-                setShowPassword((prev) => !prev)
-              }
-              error={errors.password?.message}
-              hasError={!!errors.password}
             />
-          )}
-        />
 
-        <Controller
-          control={control}
-          name="confirmPassword"
-          rules={{
-            required: "Please confirm your password",
-            validate: (value) => value === password || "Passwords do not match",
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <InputField
-              label="Confirm Password"
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              placeholder="Confirm your password"
-              secureTextEntry
-              isPasswordVisible={showConfirmPassword}
-              onTogglePasswordVisibility={() =>
-                setShowConfirmPassword((prev) => !prev)
-              }
-              error={errors.confirmPassword?.message}
-              hasError={!!errors.confirmPassword}
+            <Controller
+              control={control}
+              name="email"
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputField
+                  label="Email"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="Enter your email"
+                  error={errors.email?.message}
+                  hasError={!!errors.email}
+                />
+              )}
             />
-          )}
-        />
 
-        <Text style={styles.forgot}>Forgot Password?</Text>
+            <Text
+              style={{
+                alignSelf: "flex-start",
+                marginBottom: 8,
+                color: Colors.light.text,
+              }}
+            >
+              Account Type
+            </Text>
 
-        <PrimaryButton
-          title="Register"
-          onPress={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
-          loading={isSubmitting}
-        />
+            <Controller
+              control={control}
+              name="accountType"
+              rules={{
+                required: "Please select an account type",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <AccountTypeSelector
+                    value={value}
+                    onChange={onChange}
+                    hasError={!!errors.accountType}
+                  />
+                  {errors.accountType && (
+                    <Text style={styles.errorText}>
+                      {errors.accountType.message}
+                    </Text>
+                  )}
+                </>
+              )}
+            />
 
-        <Text style={styles.signupText}>
-          Already have an account?{" "}
-          <Text
-            style={styles.signupLink}
-            onPress={() => router.push("/(auth)/login")}
-          >
-            Login
-          </Text>
-        </Text>
+            <Controller
+              control={control}
+              name="password"
+              rules={{
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputField
+                  label="Password"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="Enter your password"
+                  secureTextEntry
+                  isPasswordVisible={showPassword}
+                  onTogglePasswordVisibility={() =>
+                    setShowPassword((prev) => !prev)
+                  }
+                  error={errors.password?.message}
+                  hasError={!!errors.password}
+                />
+              )}
+            />
 
-        <OrDivider />
+            <Controller
+              control={control}
+              name="confirmPassword"
+              rules={{
+                required: "Please confirm your password",
+                validate: (value) =>
+                  value === password || "Passwords do not match",
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <InputField
+                  label="Confirm Password"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="Confirm your password"
+                  secureTextEntry
+                  isPasswordVisible={showConfirmPassword}
+                  onTogglePasswordVisibility={() =>
+                    setShowConfirmPassword((prev) => !prev)
+                  }
+                  error={errors.confirmPassword?.message}
+                  hasError={!!errors.confirmPassword}
+                />
+              )}
+            />
 
-        <SocialAuthButton
-          provider="google"
-          onPress={() => {}}
-          mode="continue"
-        />
-        <SocialAuthButton
-          provider="facebook"
-          onPress={() => {}}
-          mode="continue"
-        />
+            <Text style={styles.forgot}>Forgot Password?</Text>
+
+            <PrimaryButton
+              title="Register"
+              onPress={handleSubmit(onSubmit)}
+              disabled={isSubmitting}
+              loading={isSubmitting}
+            />
+
+            <Text style={styles.signupText}>
+              Already have an account?{" "}
+              <Text
+                style={styles.signupLink}
+                onPress={() => router.push("/(auth)/login")}
+              >
+                Login
+              </Text>
+            </Text>
+
+            <OrDivider />
+
+            <SocialAuthButton
+              provider="google"
+              onPress={() => {}}
+              mode="continue"
+            />
+            <SocialAuthButton
+              provider="facebook"
+              onPress={() => {}}
+              mode="continue"
+            />
 
             <Text style={styles.legalText}>
               By continuing, you agree to our{" "}

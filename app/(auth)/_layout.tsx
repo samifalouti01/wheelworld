@@ -1,10 +1,17 @@
 // app/(auth)/_layout.tsx
 import { Colors, Fonts } from "@/constants/theme";
-import { Slot } from "expo-router";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { Slot, usePathname, useRouter } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AuthLayout() {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const showBack = pathname !== "/";
+
   return (
     <SafeAreaView style={styles.root} edges={["top"]}>
       <View style={styles.background}>
@@ -18,6 +25,16 @@ export default function AuthLayout() {
           <Text style={styles.brandTitle}>WHEELWORLD</Text>
         </View>
       </View>
+
+      {showBack && (
+        <Pressable
+          style={styles.backButton}
+          onPress={() => router.back()}
+          hitSlop={10}
+        >
+          <Ionicons name="arrow-back" size={24} color={Colors.dark.text} />
+        </Pressable>
+      )}
 
       <View style={styles.foreground}>
         <Slot />
@@ -64,6 +81,19 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     marginTop: 4,
     fontFamily: Fonts.sans,
+  },
+
+  backButton: {
+    position: "absolute",
+    top: 55,
+    left: 16,
+    zIndex: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   foreground: {

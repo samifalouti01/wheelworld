@@ -1,69 +1,93 @@
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 
 import Handle from "@/components/Button/Handle";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { Colors, Fonts } from "@/constants/theme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Otp() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.card}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Consulting</Text>
-        <Handle />
-      </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "position"}
+      contentContainerStyle={styles.keyboardContent}
+      keyboardVerticalOffset={Platform.OS === "ios" ? insets.top : 0}
+      enabled
+    >
+      <View style={styles.sheetWrapper}>
+        <View
+          style={[styles.card, { paddingBottom: Math.max(insets.bottom, 24) }]}
+        >
+          <View style={styles.header}>
+            <Text style={styles.title}>Consulting</Text>
+            <Handle />
+          </View>
 
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <Text style={styles.heading}>Verification Code</Text>
+          <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+          >
+            <Text style={styles.heading}>Verification Code</Text>
 
-        <Text style={styles.subtitle}>
-          Enter the 6-digit code we sent to your email or phone number.
-        </Text>
+            <Text style={styles.subtitle}>
+              Enter the 6-digit code we sent to your email or phone number.
+            </Text>
 
-        <View style={styles.otpContainer}>
-          {Array.from({ length: 6 }).map((_, index) => (
-            <TextInput
-              key={index}
-              style={styles.otpInput}
-              keyboardType="number-pad"
-              maxLength={1}
+            <View style={styles.otpContainer}>
+              {Array.from({ length: 6 }).map((_, index) => (
+                <TextInput
+                  key={index}
+                  style={styles.otpInput}
+                  keyboardType="number-pad"
+                  maxLength={1}
+                />
+              ))}
+            </View>
+
+            <PrimaryButton
+              title="Verify"
+              onPress={() => router.push("/(auth)/Success")}
             />
-          ))}
+
+            <Pressable>
+              <Text style={styles.resend}>Resend Code</Text>
+            </Pressable>
+          </ScrollView>
         </View>
-
-        <PrimaryButton
-          title="Verify"
-          onPress={() => router.push("/(auth)/Success")}
-        />
-
-        <Pressable>
-          <Text style={styles.resend}>Resend Code</Text>
-        </Pressable>
-      </ScrollView>
-    </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  keyboardContent: {
+    flex: 1,
+  },
+  sheetWrapper: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
   card: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: -24,
+    width: "100%",
     height: "70%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 60,
@@ -71,7 +95,6 @@ const styles = StyleSheet.create({
 
     paddingHorizontal: 24,
     paddingTop: 12,
-    paddingBottom: 0,
   },
 
   header: {
@@ -91,6 +114,7 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
+    flexGrow: 1,
     alignItems: "center",
     paddingBottom: 64,
   },

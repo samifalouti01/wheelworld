@@ -2,26 +2,26 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Handle from "@/components/Button/Handle";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import SocialAuthButton from "@/components/Button/SocialAuthButton";
-import AccountTypeSelector from "@/components/Form/AccountTypeSelector";
 import InputField from "@/components/Form/InputField";
+import NumberInputField from "@/components/Form/NumberField";
 import OrDivider from "@/components/Form/OrDivider";
 import { Colors, Fonts } from "@/constants/theme";
 
 type RegisterFormData = {
   fullName: string;
-  email: string;
+  phoneNumber: string;
   accountType: string;
   password: string;
   confirmPassword: string;
@@ -35,12 +35,14 @@ export default function Register() {
     control,
     handleSubmit,
     watch,
+    setError,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     mode: "onChange",
     defaultValues: {
       fullName: "",
-      email: "",
+      phoneNumber: "",
       accountType: "",
       password: "",
       confirmPassword: "",
@@ -54,12 +56,17 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
+      clearErrors("root.serverError");
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
       console.log("Register data:", data);
       router.push("/(auth)/Otp");
     } catch (error) {
       console.error("Register error:", error);
+      setError("root.serverError", {
+        type: "server",
+        message: "Could not register right now. Please try again.",
+      });
     }
   };
 
@@ -87,7 +94,9 @@ export default function Register() {
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag"
           >
-            <Text style={styles.welcome}>Create an Account</Text>
+            <Text style={styles.welcome}>
+              Lets Get <Text style={{ color: Colors.light.tint }}>Started</Text>
+            </Text>
 
             <Text style={styles.subtitle}>
               Enter your details to create a new account.
@@ -114,56 +123,27 @@ export default function Register() {
 
             <Controller
               control={control}
-              name="email"
+              name="phoneNumber"
               rules={{
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
+                required: "Phone number is required",
+                minLength: {
+                  value: 9,
+                  message: "Phone number must be 10 digits",
+                },
+                maxLength: {
+                  value: 10,
+                  message: "Phone number must be 10 digits",
                 },
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <InputField
-                  label="Email"
+              render={({ field: { onChange, value } }) => (
+                <NumberInputField
+                  label="Phone number"
                   value={value}
                   onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder="Enter your email"
-                  error={errors.email?.message}
-                  hasError={!!errors.email}
+                  placeholder="Enter your phone number"
+                  error={errors.phoneNumber?.message}
+                  hasError={!!errors.phoneNumber}
                 />
-              )}
-            />
-
-            <Text
-              style={{
-                alignSelf: "flex-start",
-                marginBottom: 8,
-                color: Colors.light.text,
-              }}
-            >
-              Account Type
-            </Text>
-
-            <Controller
-              control={control}
-              name="accountType"
-              rules={{
-                required: "Please select an account type",
-              }}
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <AccountTypeSelector
-                    value={value}
-                    onChange={onChange}
-                    hasError={!!errors.accountType}
-                  />
-                  {errors.accountType && (
-                    <Text style={styles.errorText}>
-                      {errors.accountType.message}
-                    </Text>
-                  )}
-                </>
               )}
             />
 
@@ -221,14 +201,18 @@ export default function Register() {
               )}
             />
 
-            <Text style={styles.forgot}>Forgot Password?</Text>
-
             <PrimaryButton
-              title="Register"
+              title="Continue  →"
               onPress={handleSubmit(onSubmit)}
               disabled={isSubmitting}
               loading={isSubmitting}
             />
+
+            {errors.root?.serverError?.message && (
+              <Text style={styles.formErrorText}>
+                {errors.root.serverError.message}
+              </Text>
+            )}
 
             <Text style={styles.signupText}>
               Already have an account?{" "}
@@ -363,6 +347,14 @@ const styles = StyleSheet.create({
     marginTop: -12,
     marginBottom: 16,
     alignSelf: "flex-start",
+    fontFamily: Fonts.sans,
+  },
+
+  formErrorText: {
+    color: "#EF4444",
+    fontSize: 13,
+    marginTop: 10,
+    textAlign: "center",
     fontFamily: Fonts.sans,
   },
 });

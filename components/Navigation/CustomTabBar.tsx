@@ -1,176 +1,141 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { BlurView } from "expo-blur";
-import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+    Platform,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import Animated, {
+    useAnimatedStyle,
+    withSpring,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useTranslation } from "@/constants/i18n";
+import { Fonts } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/useAppTheme";
 
-export default function CustomTabBar({ state, navigation }: BottomTabBarProps) {
-  const colorScheme = useColorScheme();
-  const theme = Colors[colorScheme ?? "light"];
-  const insets = useSafeAreaInsets();
-
-  const isAndroid = Platform.OS === "android";
-  const isDark = colorScheme === "dark";
-
-  const glassTint = isDark ? "dark" : "light";
-
-  const glassFill = isDark ? "rgba(18,18,18,0.72)" : "rgba(255,255,255,0.72)";
-
-  const borderColor = isDark
-    ? "rgba(255,255,255,0.08)"
-    : "rgba(255,255,255,0.6)";
-
-  const highlightOpacity = isDark ? 0.06 : 0.25;
-
-  const renderTabs = () =>
-    state.routes.map((route, index) => {
-      const isFocused = state.index === index;
-
-      let iconName: keyof typeof Ionicons.glyphMap = "home-outline";
-
-      if (route.name === "index") {
-        iconName = isFocused ? "home" : "home-outline";
-      } else if (route.name === "dossier") {
-        iconName = isFocused ? "document-text" : "document-text-outline";
-      } else if (route.name === "diagnostics") {
-        iconName = isFocused ? "bar-chart" : "bar-chart-outline";
-      } else if (route.name === "profile") {
-        iconName = isFocused ? "person" : "person-outline";
-      }
-
-      const onPress = () => {
-        if (!isFocused) {
-          navigation.navigate(route.name);
-        }
-      };
-
-      return (
-        <TouchableOpacity
-          key={route.key}
-          onPress={onPress}
-          style={styles.tab}
-          activeOpacity={0.7}
-        >
-          <View
-            style={[
-              styles.iconContainer,
-              isAndroid && styles.androidIconContainer,
-              {
-                backgroundColor: isAndroid
-                  ? isFocused
-                    ? theme.tint + "2E"
-                    : "transparent"
-                  : isFocused
-                    ? theme.tint + "22"
-                    : "transparent",
-                borderWidth: isAndroid && isFocused ? 1 : 0,
-                borderColor: isAndroid
-                  ? isFocused
-                    ? theme.tint + "80"
-                    : "transparent"
-                  : "transparent",
-              },
-            ]}
-          >
-            <Ionicons
-              name={iconName}
-              size={isAndroid ? 22 : 24}
-              color={
-                isAndroid
-                  ? isFocused
-                    ? theme.tint
-                    : theme.tabIconDefault
-                  : isFocused
-                    ? theme.tint
-                    : theme.tabIconDefault
-              }
-            />
-          </View>
-        </TouchableOpacity>
-      );
-    });
-
-  if (isAndroid) {
-    return (
-      <View
-        style={[
-          styles.wrapper,
-          {
-            paddingHorizontal: 14,
-            paddingBottom: Math.max(insets.bottom, 10),
-          },
-        ]}
-      >
-        <View
-          style={[
-            styles.androidBar,
-            {
-              backgroundColor: glassFill,
-              borderColor,
-            },
-          ]}
-        >
-          <LinearGradient
-            colors={
-              isDark
-                ? ["rgba(255,255,255,0.10)", "transparent"]
-                : ["rgba(255,255,255,0.78)", "transparent"]
-            }
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.5, y: 1 }}
-            style={styles.gloss}
-            pointerEvents="none"
-          />
-
-          <View
-            pointerEvents="none"
-            style={[styles.glassHighlight, { opacity: highlightOpacity }]}
-          />
-
-          <View style={styles.androidTabsContainer}>{renderTabs()}</View>
-        </View>
-      </View>
-    );
+const TAB_META: Record<
+  string,
+  {
+    icon: keyof typeof Ionicons.glyphMap;
+    iconFocused: keyof typeof Ionicons.glyphMap;
+    labelKey: "home" | "experts" | "reports" | "profile";
   }
+> = {
+  index: { icon: "home-outline", iconFocused: "home", labelKey: "home" },
+  experts: {
+    icon: "people-outline",
+    iconFocused: "people",
+    labelKey: "experts",
+  },
+  reports: {
+    icon: "document-text-outline",
+    iconFocused: "document-text",
+    labelKey: "reports",
+  },
+  profile: {
+    icon: "person-outline",
+    iconFocused: "person",
+    labelKey: "profile",
+  },
+};
+
+function TabItem({
+  route,
+  isFocused,
+  onPress,
+}: {
+  route: string;
+  isFocused: boolean;
+  onPress: () => void;
+}) {
+  const { colors } = useAppTheme();
+  const { t } = useTranslation();
+  const meta = TAB_META[route] ?? TAB_META.index;
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: withSpring(isFocused ? 1 : 0.92, { damping: 15 }) }],
+  }));
 
   return (
-    <View style={styles.wrapper}>
-      <BlurView
-        intensity={85}
-        tint={glassTint}
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={styles.tab}>
+      <Animated.View
         style={[
-          styles.blurContainer,
-          styles.iosContainer,
+          styles.pill,
+          isFocused && {
+            backgroundColor: colors.tint + "18",
+          },
+          animatedStyle,
+        ]}
+      >
+        <Ionicons
+          name={isFocused ? meta.iconFocused : meta.icon}
+          size={22}
+          color={isFocused ? colors.tint : colors.tabIconDefault}
+        />
+        {isFocused && (
+          <Text
+            style={[styles.label, { color: colors.tint }]}
+            numberOfLines={1}
+          >
+            {t(meta.labelKey)}
+          </Text>
+        )}
+      </Animated.View>
+    </TouchableOpacity>
+  );
+}
+
+export default function CustomTabBar({ state, navigation }: BottomTabBarProps) {
+  const { colors, isDark } = useAppTheme();
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View
+      style={[
+        styles.wrapper,
+        {
+          paddingBottom: Math.max(insets.bottom, 8),
+          paddingHorizontal: 12,
+        },
+      ]}
+    >
+      <View
+        style={[
+          styles.bar,
           {
-            borderTopWidth: 1,
-            borderColor,
+            backgroundColor: isDark
+              ? "rgba(24,26,28,0.96)"
+              : "rgba(255,255,255,0.97)",
+            borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+            ...(Platform.OS === "android"
+              ? { elevation: 20 }
+              : {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: -4 },
+                  shadowOpacity: isDark ? 0.4 : 0.1,
+                  shadowRadius: 16,
+                }),
           },
         ]}
       >
-        <LinearGradient
-          colors={
-            isDark
-              ? ["rgba(255,255,255,0.08)", "transparent"]
-              : ["rgba(255,255,255,0.65)", "transparent"]
-          }
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={styles.gloss}
-          pointerEvents="none"
-        />
-
-        <View
-          pointerEvents="none"
-          style={[styles.glassHighlight, { opacity: highlightOpacity }]}
-        />
-
-        <View style={styles.container}>{renderTabs()}</View>
-      </BlurView>
+        {state.routes.map((route, index) => (
+          <TabItem
+            key={route.key}
+            route={route.name}
+            isFocused={state.index === index}
+            onPress={() => {
+              if (state.index !== index) {
+                navigation.navigate(route.name);
+              }
+            }}
+          />
+        ))}
+      </View>
     </View>
   );
 }
@@ -183,80 +148,32 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 20,
   },
-
-  blurContainer: {
-    overflow: "hidden",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    backgroundColor: "transparent",
-  },
-
-  iosContainer: {},
-
-  androidBar: {
-    overflow: "hidden",
-    borderRadius: 24,
+  bar: {
+    flexDirection: "row",
+    borderRadius: 28,
     borderWidth: 1,
-    elevation: 28,
-    shadowColor: "#000",
-    shadowOpacity: 0.35,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: -8 },
-  },
-
-  gloss: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 60,
-  },
-
-  container: {
-    flexDirection: "row",
-    height: 75,
-    paddingBottom: Platform.OS === "ios" ? 20 : 12,
-    paddingTop: 10,
-    justifyContent: "space-around",
+    height: 64,
     alignItems: "center",
-  },
-
-  androidTabsContainer: {
-    flexDirection: "row",
-    height: 78,
-    paddingHorizontal: 10,
-    paddingBottom: 10,
-    paddingTop: 10,
     justifyContent: "space-around",
-    alignItems: "center",
+    paddingHorizontal: 6,
   },
-
-  glassHighlight: {
-    position: "absolute",
-    top: 0,
-    left: 16,
-    right: 16,
-    height: 1.5,
-    borderRadius: 999,
-    backgroundColor: "#FFFFFF",
-  },
-
   tab: {
     flex: 1,
     alignItems: "center",
-  },
-
-  iconContainer: {
-    width: 64,
-    height: 44,
-    borderRadius: 999,
-    alignItems: "center",
     justifyContent: "center",
   },
-
-  androidIconContainer: {
-    width: 64,
-    height: 46,
-    borderRadius: 23,
+  pill: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    height: 44,
+    paddingHorizontal: 14,
+    borderRadius: 22,
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: "700",
+    fontFamily: Fonts.sans,
   },
 });

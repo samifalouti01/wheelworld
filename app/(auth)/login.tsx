@@ -2,12 +2,12 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -76,7 +76,9 @@ export default function Login() {
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag"
           >
-            <Text style={styles.welcome}>Welcome Back</Text>
+            <Text style={styles.welcome}>
+              Welcome <Text style={{ color: Colors.light.tint }}>Back</Text>
+            </Text>
 
             <Text style={styles.subtitle}>
               Enter your credentials to access your account.
@@ -137,7 +139,7 @@ export default function Login() {
             </Text>
 
             <PrimaryButton
-              title="Login"
+              title="Sign In  →"
               onPress={handleSubmit(onSubmit)}
               disabled={isSubmitting}
               loading={isSubmitting}

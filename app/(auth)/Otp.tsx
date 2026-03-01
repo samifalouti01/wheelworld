@@ -63,7 +63,7 @@ export default function Otp() {
 
             <PrimaryButton
               title="Verify"
-              onPress={() => router.push("/(auth)/Success")}
+              onPress={() => router.push("/(auth)/AccountType")}
             />
 
             <Pressable>

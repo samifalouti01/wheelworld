@@ -29,11 +29,11 @@ export default function Start() {
 
           <PrimaryButton
             title="Get Started"
-            onPress={() => router.push("/(auth)/login")}
+            onPress={() => router.push("/(auth)/register")}
           />
 
-          <Pressable onPress={() => router.push("/(auth)/register")}>
-            <Text style={styles.signIn}>Register</Text>
+          <Pressable onPress={() => router.push("/(auth)/login")}>
+            <Text style={styles.signIn}>Sign In</Text>
           </Pressable>
         </View>
 
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 0, 
+    bottom: 0,
     height: "70%",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 60,

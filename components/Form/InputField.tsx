@@ -1,6 +1,7 @@
 import { Colors, Fonts } from "@/constants/theme";
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import type { KeyboardTypeOptions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 type InputFieldProps = {
@@ -10,7 +11,7 @@ type InputFieldProps = {
   onBlur?: () => void;
   placeholder?: string;
   secureTextEntry?: boolean;
-  keyboardType?: "default" | "email-address";
+  keyboardType?: KeyboardTypeOptions;
   error?: string;
   hasError?: boolean;
   isPasswordVisible?: boolean;
